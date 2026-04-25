@@ -46,16 +46,27 @@ const lenis = new Lenis({
       el.addEventListener('mouseleave', () => gsap.to(cursor, { scale: 1, duration: 0.3 }));
     });
 
-    // ─── HERO GRID ───────────────────────────────────
+    // ─── HERO GRID / FALLING NODES ───────────────────
     const heroGrid = document.getElementById('hero-grid');
     const heroLabels = ['HTML', 'CSS', 'JavaScript', 'Three.js', 'React.js', 'GSAP', 'Lenis'];
-    for (let i = 0; i < 60; i++) {
+    const totalNodes = 26;
+
+    for (let i = 0; i < totalNodes; i++) {
       const cell = document.createElement('div');
-      cell.className = 'hero-grid-cell';
-      const label = document.createElement('span');
-      label.className = 'hero-grid-label';
-      label.textContent = heroLabels[Math.floor(Math.random() * heroLabels.length)];
-      cell.appendChild(label);
+      const isText = Math.random() > 0.55;
+      cell.className = `hero-grid-cell ${isText ? 'text' : 'box'}`;
+
+      if (isText) {
+        cell.textContent = heroLabels[Math.floor(Math.random() * heroLabels.length)];
+      }
+
+      const left = Math.random() * 100;
+      const duration = 8 + Math.random() * 8;
+      const delay = -Math.random() * duration;
+
+      cell.style.left = `${left}%`;
+      cell.style.animationDelay = `${delay}s`;
+      cell.style.animationDuration = `${duration}s`;
       heroGrid.appendChild(cell);
     }
 

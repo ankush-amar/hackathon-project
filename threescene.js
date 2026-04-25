@@ -253,11 +253,11 @@
     if (typeof ScrollTrigger !== 'undefined' && typeof gsap !== 'undefined') {
       ScrollTrigger.create({
         trigger:   '#threejs-showcase',
-        start:     'top top',
-        end:       `+=${window.innerHeight * 4.5}`,  // scroll distance for all 4 shapes
+        start:     'top top+=80',
+        end:       `+=${window.innerHeight * 4.0}`,  // scroll distance for all 4 shapes
         pin:       true,
         pinSpacing: true,
-        scrub:     0.8,
+        scrub:     0.4,
         onUpdate:  (self) => {
           // Map 0→1 progress → shape index 0→3
           const raw = self.progress * SHAPES.length;
