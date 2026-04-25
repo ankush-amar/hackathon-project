@@ -48,9 +48,14 @@ const lenis = new Lenis({
 
     // ─── HERO GRID ───────────────────────────────────
     const heroGrid = document.getElementById('hero-grid');
+    const heroLabels = ['HTML', 'CSS', 'JavaScript', 'Three.js', 'React.js', 'GSAP', 'Lenis'];
     for (let i = 0; i < 60; i++) {
       const cell = document.createElement('div');
       cell.className = 'hero-grid-cell';
+      const label = document.createElement('span');
+      label.className = 'hero-grid-label';
+      label.textContent = heroLabels[Math.floor(Math.random() * heroLabels.length)];
+      cell.appendChild(label);
       heroGrid.appendChild(cell);
     }
 
@@ -72,6 +77,19 @@ const lenis = new Lenis({
       .from('.hero-grid-cell', {
         opacity: 0, stagger: { each: 0.02, from: 'random' }, duration: 0.5
       }, 0.4);
+
+    // ─── HERO CODE TYPING ────────────────────────────
+    const codeText = "const developer = {\n  name: 'Ankush Amar',\n  skills: ['React', 'Node.js', 'Three.js'],\n  passion: 'Building Digital Experiences'\n};\n\nconsole.log(developer);";
+    const typingCode = document.getElementById('typing-code');
+    let i = 0;
+    function typeWriter() {
+      if (i < codeText.length) {
+        typingCode.innerHTML += codeText.charAt(i);
+        i++;
+        setTimeout(typeWriter, 50);
+      }
+    }
+    gsap.to('.hero-code', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 1.5, onComplete: typeWriter });
 
     // ─── NAV SCROLL ──────────────────────────────────
     ScrollTrigger.create({

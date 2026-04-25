@@ -18,6 +18,9 @@
 
   <!-- Lenis Smooth Scroll -->
   <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
+  <!-- Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 
 <body>
@@ -40,6 +43,7 @@
   <!-- HERO -->
   <section id="hero">
     <div class="hero-grid" id="hero-grid"></div>
+    <canvas id="hero-canvas"></canvas>
 
     <p class="hero-label">Full-Stack Developer &amp; UI Engineer</p>
     <h1 class="hero-title">
@@ -51,6 +55,9 @@
       I craft fast, accessible, and beautifully animated web experiences.
       Focused on skill development through real-world projects and modern tooling.
     </p>
+    <div class="hero-code">
+      <pre><code id="typing-code"></code></pre>
+    </div>
     <div class="hero-cta">
       <a href="https://github.com/ankush-amar" class="btn-primary">View Work</a>
       <a href="#" class="btn-outline">Get in Touch</a>
@@ -193,10 +200,16 @@
     </div>
   </section>
 
+  <!-- THREEJS SHOWCASE -->
+  <div id="threejs-showcase">
+    <canvas id="showcase-canvas"></canvas>
+  </div>
+
   <!-- ABOUT -->
   <section id="about">
     <p class="section-label reveal">Background</p>
     <h2 class="section-title reveal">About Me</h2>
+    <canvas id="orbs-canvas"></canvas>
 
     <div class="about-grid">
       <div>
@@ -262,5 +275,6 @@
     <!-- <p>Built with GSAP + Lenis + Vanilla JS</p> -->
   </footer>
   <script src="script.js"></script>
+  <script src="threescene.js"></script>
 </body>
 </html>
