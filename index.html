@@ -165,24 +165,7 @@
             <a href="#" class="project-link">GitHub →</a>
           </div>
         </div>
-        <div class="project-visual"><img="project.png"></div>
-      </div>
-
-      <!-- Card 1 -->
-      <div class="project-card reveal">
-        <span class="project-tag">UI/UX</span>
-        <h3 class="project-title">Motion Studio</h3>
-        <p class="project-desc">An interactive animation playground for designers to prototype GSAP timelines visually.</p>
-        <div class="project-stack">
-          <span class="stack-tag">React</span>
-          <span class="stack-tag">GSAP</span>
-          <span class="stack-tag">WebGL</span>
-        </div>
-        <div class="project-links" style="margin-top:2rem;">
-          <a href="#" class="project-link">View Project →</a>
-        </div>
-      </div>
-
+        <div class="project-visual"><img src="project.png" alt="Project screenshot" /></div>
       <!-- Card 2 -->
       <div class="project-card reveal">
         <span class="project-tag">Full-Stack</span>
@@ -204,6 +187,92 @@
   <div id="threejs-showcase">
     <canvas id="showcase-canvas"></canvas>
   </div>
+
+  <!-- AUTH / CAREER HUB -->
+  <section id="auth-hub">
+    <p class="section-label reveal">Career Hub</p>
+    <h2 class="section-title reveal">Login, Track & Apply</h2>
+
+    <div class="auth-hub-grid">
+      <div class="auth-panel reveal">
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-target="login-panel">Login</button>
+          <button class="auth-tab" data-target="signup-panel">Sign Up</button>
+        </div>
+
+        <form id="login-panel" class="auth-form active">
+          <label>Email / GitHub</label>
+          <input type="text" id="login-user" placeholder="you@example.com or GitHub handle" />
+
+          <label>Password</label>
+          <div class="password-field">
+            <input type="password" id="login-pass" placeholder="••••••••" />
+            <button type="button" class="password-toggle" data-target="login-pass" aria-label="Show password">👁</button>
+          </div>
+
+          <label>Platform Handles</label>
+          <div class="form-row">
+            <input type="text" id="login-github" placeholder="GitHub handle" />
+            <input type="text" id="login-leetcode" placeholder="LeetCode handle" />
+          </div>
+          <label>LinkedIn</label>
+          <input type="text" id="login-linkedin" placeholder="LinkedIn username or URL" />
+
+          <button type="submit" class="btn-primary">Login</button>
+        </form>
+
+        <form id="signup-panel" class="auth-form">
+          <label>Email</label>
+          <input type="email" id="signup-email" placeholder="you@example.com" />
+
+          <label>Password</label>
+          <div class="password-field">
+            <input type="password" id="signup-pass" placeholder="Create a password" />
+            <button type="button" class="password-toggle" data-target="signup-pass" aria-label="Show password">👁</button>
+          </div>
+
+          <label>LinkedIn</label>
+          <input type="text" id="signup-linkedin" placeholder="LinkedIn username or URL" />
+
+          <label>Career Goal</label>
+          <input type="text" id="signup-goal" placeholder="Senior or Fullstack developer" />
+
+          <button type="submit" class="btn-primary">Create Account</button>
+        </form>
+      </div>
+
+      <div class="auth-info reveal">
+        <div class="status-card">
+          <p class="status-label">Platform Tracking</p>
+          <div class="status-copy">
+            <p id="user-welcome">Sign in to sync GitHub, LeetCode and certification progress.</p>
+            <ul class="platform-list">
+              <li>GitHub: <span id="status-github">—</span></li>
+              <li>LeetCode: <span id="status-leetcode">—</span></li>
+              <li>Progress Score: <span id="status-score">—</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="verify-card">
+          <p class="status-label">AI Certificate Verification</p>
+          <textarea id="certificate-text" rows="4" placeholder="Paste certificate title or issuer"></textarea>
+          <button type="button" id="verify-certificate" class="btn-outline">Verify Certificate</button>
+          <p id="certificate-result" class="status-result">Industry-fit result will appear here.</p>
+        </div>
+
+        <div class="apply-card">
+          <p class="status-label">Auto Apply Assistant</p>
+          <div class="apply-toggle">
+            <label><input type="checkbox" id="auto-apply-senior" /> Senior Developer</label>
+            <label><input type="checkbox" id="auto-apply-fullstack" /> Fullstack Developer</label>
+          </div>
+          <button id="run-auto-apply" class="btn-primary">Run AI Application</button>
+          <p id="apply-result" class="status-result">AI assistant will evaluate your eligibility and respond here.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- ABOUT -->
   <section id="about">

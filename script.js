@@ -172,6 +172,195 @@ const lenis = new Lenis({
       );
     });
 
+    // ─── AUTH HUB INTERACTIONS ───────────────────────
+    const API_BASE = 'http://localhost:3000/api';
+    const authState = {
+      loggedIn: false,
+      token: '',
+      user: null,
+      github: '—',
+      leetcode: '—',
+      linkedin: '—',
+      score: 0
+    };
+
+    const authTabs = document.querySelectorAll('.auth-tab');
+    const authForms = document.querySelectorAll('.auth-form');
+    const authWelcome = document.getElementById('user-welcome');
+    const statusGithub = document.getElementById('status-github');
+    const statusLeetCode = document.getElementById('status-leetcode');
+    const statusScore = document.getElementById('status-score');
+    const certificateResult = document.getElementById('certificate-result');
+    const applyResult = document.getElementById('apply-result');
+
+    async function apiRequest(path, payload = {}, method = 'POST') {
+      try {
+        const response = await fetch(`${API_BASE}${path}`, {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+            ...(authState.token ? { Authorization: `Bearer ${authState.token}` } : {})
+          },
+          body: method === 'GET' ? null : JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || 'API request failed');
+        }
+        return data;
+      } catch (error) {
+        return { error: error.message };
+      }
+    }
+
+    function setActiveForm(targetId) {
+      authTabs.forEach(tab => tab.classList.toggle('active', tab.dataset.target === targetId));
+      authForms.forEach(form => form.classList.toggle('active', form.id === targetId));
+    }
+
+    function updatePlatformSummary() {
+      statusGithub.textContent = authState.github || '—';
+      statusLeetCode.textContent = authState.leetcode || '—';
+      statusScore.textContent = authState.score ? `${authState.score}%` : '—';
+    }
+
+    authTabs.forEach(tab => {
+      tab.addEventListener('click', () => setActiveForm(tab.dataset.target));
+    });
+
+    document.querySelectorAll('.password-toggle').forEach(button => {
+      const targetInput = document.getElementById(button.dataset.target);
+      button.addEventListener('click', () => {
+        const isText = targetInput.type === 'text';
+        targetInput.type = isText ? 'password' : 'text';
+        button.textContent = isText ? '👁' : '🙈';
+        button.setAttribute('aria-label', isText ? 'Show password' : 'Hide password');
+      });
+    });
+
+    document.getElementById('login-panel').addEventListener('submit', async e => {
+      e.preventDefault();
+      const user = document.getElementById('login-user').value.trim();
+      const pass = document.getElementById('login-pass').value.trim();
+      const githubHandle = document.getElementById('login-github').value.trim();
+      const leetcodeHandle = document.getElementById('login-leetcode').value.trim();
+      const linkedin = document.getElementById('login-linkedin').value.trim();
+
+      if (!user || !pass) {
+        certificateResult.textContent = 'Please enter both login and password to continue.';
+        return;
+      }
+
+      const result = await apiRequest('/login', { user, password: pass, githubHandle, leetcodeHandle, linkedin });
+      if (result.error) {
+        certificateResult.textContent = result.error;
+        return;
+      }
+
+      authState.loggedIn = true;
+      authState.token = result.token;
+      authState.user = result.email;
+      authState.github = result.githubHandle || 'not provided';
+      authState.leetcode = result.leetcodeHandle || 'not provided';
+      authState.linkedin = linkedin || 'not provided';
+      authState.score = result.score || 0;
+      authWelcome.textContent = `Welcome back, ${result.email}. Your career progress is ready.`;
+      updatePlatformSummary();
+      certificateResult.textContent = 'Tracking data synced with backend.';
+    });
+
+    document.getElementById('signup-panel').addEventListener('submit', async e => {
+      e.preventDefault();
+      const email = document.getElementById('signup-email').value.trim();
+      const pass = document.getElementById('signup-pass').value.trim();
+      const linkedin = document.getElementById('signup-linkedin').value.trim();
+      const goal = document.getElementById('signup-goal').value.trim();
+
+      if (!email || !pass) {
+        certificateResult.textContent = 'Please complete the signup fields to continue.';
+        return;
+      }
+
+      const result = await apiRequest('/signup', { email, password: pass, linkedin, goal });
+      if (result.error) {
+        certificateResult.textContent = result.error;
+        return;
+      }
+
+      authState.loggedIn = true;
+      authState.token = result.token;
+      authState.user = result.email;
+      authState.github = result.githubHandle || 'pending';
+      authState.leetcode = result.leetcodeHandle || 'pending';
+      authState.linkedin = linkedin || 'pending';
+      authState.score = result.score || 0;
+      authWelcome.textContent = `Welcome, ${goal || 'future developer'}. Start tracking your progress.`;
+      updatePlatformSummary();
+      certificateResult.textContent = 'Account created. Add GitHub / LeetCode handles to improve scores.';
+    });
+
+    document.getElementById('verify-certificate').addEventListener('click', async () => {
+      const text = document.getElementById('certificate-text').value.trim();
+      if (!text) {
+        certificateResult.textContent = 'Paste a certificate title or issuer to verify it.';
+        return;
+      }
+
+      if (!authState.loggedIn) {
+        certificateResult.textContent = 'Please log in before verifying certificates.';
+        return;
+      }
+
+      const result = await apiRequest('/verify-certificate', { certificateText: text });
+      certificateResult.textContent = result.error ? result.error : result.verdict;
+    });
+
+    document.getElementById('run-auto-apply').addEventListener('click', async () => {
+      const senior = document.getElementById('auto-apply-senior').checked;
+      const fullstack = document.getElementById('auto-apply-fullstack').checked;
+
+      if (!authState.loggedIn) {
+        applyResult.textContent = 'Please log in before running the application assistant.';
+        return;
+      }
+
+      if (!senior && !fullstack) {
+        applyResult.textContent = 'Select at least one role to let the AI assistant evaluate your eligibility.';
+        return;
+      }
+
+      const result = await apiRequest('/auto-apply', { roles: { senior, fullstack } });
+      applyResult.textContent = result.error ? result.error : result.result;
+    });
+
+    if (typeof ScrollTrigger !== 'undefined' && document.querySelector('#auth-hub')) {
+      ScrollTrigger.create({
+        trigger: '#auth-hub',
+        start: 'top 80%',
+        end: 'bottom top',
+        scrub: true,
+        onUpdate: self => {
+          gsap.to('#threejs-showcase', {
+            scale: 1 + self.progress * 0.04,
+            rotation: self.progress * 3,
+            transformOrigin: 'center center',
+            ease: 'none'
+          });
+          gsap.to('.auth-panel', {
+            y: -18 * self.progress,
+            opacity: 0.92 + self.progress * 0.08,
+            ease: 'none'
+          });
+          gsap.to('.auth-info', {
+            y: 18 * self.progress,
+            opacity: 0.92 + self.progress * 0.08,
+            ease: 'none'
+          });
+        }
+      });
+    }
+
     // Smooth anchor scrolling via Lenis
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener('click', e => {
