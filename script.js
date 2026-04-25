@@ -55,6 +55,7 @@ const lenis = new Lenis({
     }
 
     // ─── HERO ENTRANCE ───────────────────────────────
+    console.log('Script loaded, starting hero animation');
     const heroTL = gsap.timeline({ delay: 0.2 });
 
     heroTL
